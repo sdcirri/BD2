@@ -1,0 +1,111 @@
+Use-case Registrazione_Ricoveri_e_Prestazioni
+Registra_Paziente(cf: cf_t, nome: stringM, cognome: stringM, nascita: date, telefono: numtel, email: email_t, casella: indirizzo) : cf_t
+    algoritmo:
+         1    exists <- risultato della query SQL ottenuta sostituendo a :cf il valore dell’omonimo parametro attuale
+                 select exist (select 1 from Paziente where cf = :cf);
+         2    if exists rappresenta un errore then
+         3        inoltra l'errore;
+         4    else if exists = TRUE then
+         5        inoltra l'errore 'paziente già esistente';
+         6    else
+         7        res <- risultato della query SQL ottenuta sostituendo a :cf, :nome, :cognome, :nascita
+                     i valori degli omonimi parametri attuali
+                     insert ignore into Persona values (:cf, :nome, :cognome, :nascita);
+         8    if res rappresenta un errore then
+         9        inoltra l'errore;
+        10    else
+        11        res <- risultato della query SQL ottenuta sostituendo a :cf, :telefono, :email, :casella
+                     i valori degli omonimi parametri attuali
+                     insert into Paziente values (:cf, :telefono, :email, :casella);
+        12        if res rappresenta un errore then
+        13            inoltra l'errore;
+        14        else return :cf;
+
+Registra_Ricovero(p: cf_t, m: cf_t, pl: pl_t, piano: integer, set: int_pos, st: int_pos) : (cf_t, cf_t, datetime)
+    algoritmo:
+         1    ric <- risultato della query SQL ottenuta sostituendo a :p il valore dell’omonimo parametro attuale
+                  select exists(select 1 from Ricovero where paziente = :p and dimesso = NULL);
+         2    if ric rappresenta un errore then
+         3        inoltra l'errore;
+         4    else if ric = TRUE then
+         5        inoltra l'errore 'paziente già ricoverato';
+         6    else
+         7        time <- CURRENT_TIMESTAMP
+         8        res <- risultato della transazione SQL ottenuta sostituendo a :p, :m, :pl, :piano, :set, :st
+                     i valori degli omonimi parametri attuali
+                     begin transaction;
+                     insert into Prestazione values (:p, :m, time);
+                     insert into Ricovero values(:p, :m, time, :pl, :piano, :set, :st);
+                     commit work;
+         9        if res rappresenta un errore then
+        10            inoltra l'errore;
+        11        else return (:p, :m, time);
+
+Dimetti(p: cf_t, m: cf_t, i: datetime) : (cf_t, cf_t, datetime)
+    algoritmo:
+         1    ric <- risultato della query SQL ottenuta sostituendo a :p, :m, :i i valori degli omonimi parametri attuali
+                  select exists(select 1 from Ricovero where (paziente, medico, inizio, dimesso) = (:p, :m, :i, NULL);
+         2    if ric rappresenta un errore then
+         3        inoltra l'errore;
+         4    else if ric = FALSE then
+         5        inoltra l'errore 'ricovero non trovato';
+         6    else
+         7        time <- CURRENT_TIMESTAMP
+         8        u <- risultato della query SQL ottenuta sostituendo a :p, :m, :i i valori degli omonimi parametri attuali
+                      update Ricovero set dimesso = time where (paziente, medico, inizio) = (:p, :m, :i);
+         9    if u rappresenta un errore then
+        10        inoltra l'errore;
+        11    else return (:p, :m, :i);
+
+Registra_Prestazione(p: cf_t, m: cf_t, desc: stringL, spec: stringL) : (cf_t, cf_t, datetime)
+    algoritmo:
+         1    ric <- risultato della query SQL ottenuta sostituendo a :p il valore dell’omonimo parametro attuale
+                  select exists(select 1 from Ricovero where paziente = :p and dimesso = NULL);
+         2    if ric rappresenta un errore then
+         3        inoltra l'errore;
+         4    else if ric = TRUE then
+         5        inoltra l'errore 'paziente ricoverato: impossibile erogare prestazioni';
+         6    else
+         7        time <- CURRENT_TIMESTAMP
+         8        i <- risultato della transazione SQL ottenuta sostituendo a :p, :m, :desc, :spec
+                      i valori degli omonimi parametri attuali
+                      begin transaction;
+                      insert into Prestazione values (:p, :m, time);
+                      insert into PrestazioneEst values(:p, :m, time, :desc, :spec);
+                      commit work;
+         9        if i rappresenta un errore then
+        10            inoltra l'errore;
+        11        else return (:p, :m, time);
+
+
+
+Ricerca_Medici(spec: stringL) : cf_t(0,N)
+    algoritmo:
+         1    S1 <- risultato della query SQL ottenuta sostituendo a :spec il valore dell’omonimo parametro attuale
+                  select cf from Medico where specPrim = :spec;
+         2    if S1 rappresenta un errore then
+         3        inoltra l'errore;
+         4    else if S1 ≠ NULL then
+         5        return S1;
+         6    else
+         7        S2 <- risultato della query SQL ottenuta sostituendo a :spec il valore dell’omonimo parametro attuale
+                    select m.cf from Medico m, SpecSec s where s.medico = m.cf and s.spec = :spec;
+         8        if S1 rappresenta un errore then
+         9            inoltra l'errore;
+        10        else return S2;
+
+Pianifica_Itinerario(m: cf) : (integer, int_pos)(0,N)
+    algoritmo:
+         1    isM <- risultato della query SQL ottenuta sostituendo a :m il valore dell’omonimo parametro attuale
+                  select exist(select 1 from Medico where cf = :m);
+         2    if isM rappresenta un errore then
+         3        inoltra l'errore;
+         4    else if isM = FALSE then
+         5        inoltra l'errore ':m non è un medico';
+         6    else
+         7        it <- risultato della query SQL ottenuta sostituendo a :m il valore dell’omonimo parametro attuale
+                      select ppl as p, stpl as s from Ricovero where medico = :m
+                      order by p, s asc;
+         8        if it rappresenta un errore then
+         9            inoltra l'errore;
+        10        else return it;

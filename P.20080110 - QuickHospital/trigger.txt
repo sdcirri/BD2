@@ -1,0 +1,26 @@
+Trigger per V.Paziente.ricoveri:
+    - Operazioni:
+        - inserimento in Prestazione
+    - Istante di invocazione: prima dell'operazione
+    - Funzione:
+        1. sia new l'ennupla che si sta inserendo
+        2. error := select exists(select 1 from Ricovero where paziente = new.paziente and dimesso = NULL)
+        3. se error = TRUE blocca l'operazione
+        4. altrimenti consenti l'operazione
+
+Trigger per V.Prestazione.disg:
+    - Operazioni:
+        - inserimento in Ricovero
+        - inserimento in PrestazioneEst
+    - Istante di invocazione: prima dell'operazione
+    - Funzione:
+        1. se l'operazione inserisce in Ricovero
+        1.1. sia new l'ennupla inserita
+        1.2. error := select exist(select 1 from PrestazioneEst where (paziente, medico, inizio) = (new.paziente, new.medico, new.inizio));
+        1.3. se error = TRUE blocca l'operazione
+        1.4. altrimenti consenti l'operazione
+        2. se l'operazione inserisce in Ricovero
+        2.1. sia new l'ennupla inserita
+        2.2. error := select exist(select 1 from Ricovero where (paziente, medico, inizio) = (new.paziente, new.medico, new.inizio));
+        2.3. se error = TRUE blocca l'operazione
+        2.4. altrimenti consenti l'operazione

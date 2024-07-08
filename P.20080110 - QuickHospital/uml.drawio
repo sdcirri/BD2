@@ -1,0 +1,43 @@
+<mxfile host="Electron" modified="2024-05-16T20:26:57.056Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="naVZsf6Yco6QB_ck8JCQ" version="24.4.0" type="device">
+  <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
+    <mxGraphModel dx="1434" dy="840" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="1T2bqdTXxD9RY-aOahLc-1" value="Personale&lt;br&gt;accettazione" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+          <mxGeometry x="300" y="220" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1T2bqdTXxD9RY-aOahLc-2" value="Registrazione_Ricoveri_e_Prestazioni" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="200" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1T2bqdTXxD9RY-aOahLc-4" value="Pianificazione_Itinerario" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="360" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1T2bqdTXxD9RY-aOahLc-7" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="1T2bqdTXxD9RY-aOahLc-1" target="1T2bqdTXxD9RY-aOahLc-2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="470" y="410" as="sourcePoint" />
+            <mxPoint x="520" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1T2bqdTXxD9RY-aOahLc-11" value="Ricerca_Medici" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="280" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1T2bqdTXxD9RY-aOahLc-12" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="1T2bqdTXxD9RY-aOahLc-1" target="1T2bqdTXxD9RY-aOahLc-11" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="460" y="400" as="sourcePoint" />
+            <mxPoint x="510" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nxYbOvtluEdVCAPoKeiY-2" value="Medici" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+          <mxGeometry x="300" y="350" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nxYbOvtluEdVCAPoKeiY-3" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="nxYbOvtluEdVCAPoKeiY-2" target="1T2bqdTXxD9RY-aOahLc-4" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="263" as="sourcePoint" />
+            <mxPoint x="541" y="299" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
